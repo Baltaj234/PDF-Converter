@@ -4,13 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>File to PDF Converter</title>
-  <!-- Tailwind CSS CDN -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Ensure seamless display */
+    #pdf-preview {
+      width: 100%;
+      height: 100vh; /* Take up full height of viewport */
+      background: transparent; /* Removes any background */
+      border: none; /* No borders */
+      display: block;
+    }
+    .pdf-container {
+      width: 100%;
+      height: 100vh;
+      overflow: hidden; /* Hide any scrollbars */
+    }
+  </style>
 </head>
 <body class="bg-gray-100 font-sans">
   <div class="container mx-auto p-6">
     <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">File to PDF Converter</h1>
     
+    <!-- File Drop Area -->
     <div id="drop-area" class="border-2 border-dashed border-gray-400 rounded-lg p-8 bg-white hover:bg-gray-50 transition duration-300">
       <p class="text-xl text-gray-600">Drag & Drop Files Here</p>
       <p class="text-gray-500 my-4">or</p>
@@ -20,16 +35,18 @@
       </label>
     </div>
     
+    <!-- File List Display -->
     <div id="file-list" class="mt-6 text-center text-gray-700"></div>
     
+    <!-- Buttons -->
     <div class="flex justify-center mt-6 space-x-4">
       <button id="submit-btn" class="px-6 py-3 bg-green-500 text-white rounded-md hover:bg-green-600 transition">Generate PDF</button>
       <button id="delete-btn" class="px-6 py-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition">Delete PDF</button>
     </div>
     
-    <!-- PDF Preview -->
-    <div class="mt-8">
-      <iframe id="pdf-preview" src="" class="w-full h-96 border-none shadow-lg rounded-lg"></iframe>
+    <!-- PDF Display -->
+    <div class="pdf-container mt-8">
+      <object id="pdf-preview" type="application/pdf" data="" aria-label="PDF Preview"></object>
     </div>
   </div>
 
@@ -89,7 +106,7 @@
       if (response.ok) {
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
-        pdfPreview.src = url;
+        pdfPreview.data = url;
       } else {
         alert('Failed to generate PDF.');
       }
@@ -97,7 +114,7 @@
 
     // Delete PDF preview
     deleteBtn.addEventListener('click', () => {
-      pdfPreview.src = '';
+      pdfPreview.data = '';
       files = [];
       fileListDiv.innerHTML = '';
     });
